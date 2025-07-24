@@ -4,6 +4,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { Item } from './entities/item.entity';
+import { Listing } from './entities/listing-entity';
 
 @Injectable()
 export class ItemsService {
@@ -13,7 +14,12 @@ export class ItemsService {
     private readonly entityManager: EntityManager,
   ) {}
   async create(createItemDto: CreateItemDto) {
-    const item = new Item(createItemDto);
+    const listing = new Listing({
+      ...createItemDto.listing,
+      rating: 0,
+    });
+
+    const item = new Item({ ...createItemDto, listing });
     return await this.entityManager.save(item);
   }
 
