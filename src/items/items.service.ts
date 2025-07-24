@@ -4,7 +4,7 @@ import { EntityManager, Repository } from 'typeorm';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { Item } from './entities/item.entity';
-import { Listing } from './entities/listing-entity';
+import { Listing } from './entities/listing.entity';
 
 @Injectable()
 export class ItemsService {
@@ -19,18 +19,20 @@ export class ItemsService {
       rating: 0,
     });
 
-    const item = new Item({ ...createItemDto, listing });
+    const item = new Item({ ...createItemDto, listing, comments: [] });
     return await this.entityManager.save(item);
   }
 
   async findAll() {
-    return this.itemRepository.find();
+    return this.itemRepository.find({
+      relations: ['listing', 'comments'],
+    });
   }
 
   async findOne(id: number) {
     return this.itemRepository.findOne({
       where: { id },
-      relations: { listing: true },
+      relations: ['listing', 'comments'],
     });
   }
 
