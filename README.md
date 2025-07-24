@@ -21,43 +21,128 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# NestJS TypeORM Items API
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A backend API built with [NestJS](https://nestjs.com/) and TypeORM for managing items, listings, and comments. This project provides a simple CRUD interface for `Item` resources, each linked to a `Listing` and a set of `Comments`.
 
-## Project setup
+## Features
+- RESTful CRUD endpoints for items
+- Each item has a listing (with description and rating)
+- Each item can have multiple comments
+- MySQL database connection (configurable via environment variables)
 
-```bash
-$ yarn install
-```
-
-## Compile and run the project
-
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
-```
-
-## Run tests
+## Getting Started
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+yarn install
+yarn start:dev
 ```
 
-## Deployment
+The server runs on `http://localhost:3000` by default.
+
+## API Endpoints
+
+All endpoints are prefixed with `/items`.
+
+### Create Item
+- **POST** `/items`
+- **Body:**
+```json
+{
+  "name": "Item name",
+  "public": true,
+  "listing": {
+    "description": "Listing description"
+  }
+}
+```
+- **Response:** Created item object
+
+### Get All Items
+- **GET** `/items`
+- **Response:** Array of items with listings and comments
+
+### Get One Item
+- **GET** `/items/:id`
+- **Response:** Item object with listing and comments
+
+### Update Item
+- **PATCH** `/items/:id`
+- **Body:**
+```json
+{
+  "public": false,
+  "comments": [
+    { "content": "New comment" }
+  ]
+}
+```
+- **Response:** Updated item object
+
+### Delete Item
+- **DELETE** `/items/:id`
+- **Response:** 200 OK on success
+
+## Example Usage
+
+#### Create an Item
+```bash
+curl -X POST http://localhost:3000/items \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "Sample Item",
+    "public": true,
+    "listing": { "description": "Test listing" }
+  }'
+```
+
+#### Get All Items
+```bash
+curl http://localhost:3000/items
+```
+
+#### Update an Item
+```bash
+curl -X PATCH http://localhost:3000/items/1 \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "public": false,
+    "comments": [ { "content": "Updated comment" } ]
+  }'
+```
+
+#### Delete an Item
+```bash
+curl -X DELETE http://localhost:3000/items/1
+```
+
+## Database Setup
+
+The SQL database runs locally in a Docker container. Before starting the backend, make sure you have Docker installed and the MySQL container running.
+
+1. Start MySQL in Docker (example):
+   ```bash
+   docker run --name nest-mysql -e MYSQL_ROOT_PASSWORD=yourpassword -e MYSQL_DATABASE=nestjs_db -p 3306:3306 -d mysql:8
+   ```
+   Adjust the password and database name as needed.
+
+2. Create a `.env` from `.env.example` file in the project root with the following variables:
+   ```env
+   MYSQL_HOST=localhost
+   MYSQL_PORT=3306
+   MYSQL_DATABASE=nestjs_db
+   MYSQL_USERNAME=root
+   MYSQL_PASSWORD=yourpassword
+   MYSQL_SYNCHRONIZE=true
+   ```
+   Make sure these match your Docker container settings.
+
+3. Now you can start the backend and it will connect to the local MySQL database.
+
+## License
+
+MIT
+
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 

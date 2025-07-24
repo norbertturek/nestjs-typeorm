@@ -7,7 +7,6 @@ import { Item } from './entities/item.entity';
 import { Listing } from './entities/listing.entity';
 import { Comment } from './entities/comment.entity';
 
-
 @Injectable()
 export class ItemsService {
   constructor(
