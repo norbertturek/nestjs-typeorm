@@ -24,7 +24,7 @@ export class Item {
   @JoinColumn()
   listing: Listing;
 
-  @OneToMany(() => Comment, (comment) => comment.item)
+  @OneToMany(() => Comment, (comment) => comment.item, { cascade: true })
   comments: Comment[];
 
   constructor(item: Partial<Item>) {

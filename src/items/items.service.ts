@@ -5,6 +5,8 @@ import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { Item } from './entities/item.entity';
 import { Listing } from './entities/listing.entity';
+import { Comment } from './entities/comment.entity';
+
 
 @Injectable()
 export class ItemsService {
@@ -12,7 +14,7 @@ export class ItemsService {
     @InjectRepository(Item)
     private readonly itemRepository: Repository<Item>,
     private readonly entityManager: EntityManager,
-  ) {}
+  ) { }
   async create(createItemDto: CreateItemDto) {
     const listing = new Listing({
       ...createItemDto.listing,
@@ -39,6 +41,9 @@ export class ItemsService {
   async update(id: number, updateItemDto: UpdateItemDto) {
     const item = await this.itemRepository.findOneBy({ id });
     item!.public = updateItemDto.public;
+
+    const comments = updateItemDto.comments.map((createCommentDto) => new Comment(createCommentDto));
+    item!.comments = comments;
     await this.entityManager.save(item);
   }
 
