@@ -28,7 +28,10 @@ export class ItemsService {
   }
 
   async findOne(id: number) {
-    return this.itemRepository.findOneBy({ id });
+    return this.itemRepository.findOne({
+      where: { id },
+      relations: { listing: true },
+    });
   }
 
   async update(id: number, updateItemDto: UpdateItemDto) {
